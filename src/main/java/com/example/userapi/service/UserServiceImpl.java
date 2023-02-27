@@ -29,8 +29,8 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserEntity createUser(UserEntity userEntity) throws UserAlreadyExistsException {
 
-        UserEntity test = userRepository.findByUsername(userEntity.getUsername());
-        if (userRepository.findByUsername(userEntity.getUsername())!= null) {
+        UserEntity existingUser = userRepository.findByUsername(userEntity.getUsername());
+        if (existingUser!= null) {
             log.info("User already exists");
             throw new UserAlreadyExistsException("User already exists");
         }

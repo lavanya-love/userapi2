@@ -40,7 +40,7 @@ public class UserControllerTest {
     private UserServiceImpl userServiceImpl;
 
     @Test
-    public void getAll_ShouldReturnListOfProducts() throws Exception {
+    public void getAll_ShouldReturnListOfUsers() throws Exception {
 
         List<UserEntity> users = new ArrayList<>();
         UserEntity user1 = UserEntity.builder()
