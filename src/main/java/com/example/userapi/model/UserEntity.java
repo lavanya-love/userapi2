@@ -1,13 +1,11 @@
 package com.example.userapi.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-
 import java.time.Instant;
-import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Getter
@@ -16,10 +14,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Table(name ="userdetails")
-
 public class UserEntity {
 
-    //public String getUsername;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -68,7 +64,5 @@ public class UserEntity {
 
     @Column(name = "postcode")
     private String postcode;
-
-
 
 }

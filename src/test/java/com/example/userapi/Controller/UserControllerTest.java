@@ -5,30 +5,35 @@ import com.example.userapi.model.UserEntity;
 import com.example.userapi.service.UserServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.json.JSONObject;
+
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.ExpectedCount.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @AutoConfigureJsonTesters
 @WebMvcTest(UserController.class)
+@ExtendWith(MockitoExtension.class)
 public class UserControllerTest {
 
     @Autowired
@@ -65,31 +70,55 @@ public class UserControllerTest {
         users.add(user2);
         when(userServiceImpl.getAllUsers()).thenReturn(users);
 
+
+       //Act
         this.mvc.perform(get("/user"))
                 .andExpect(status().isOk());
 
 
-        // Verify that the UserServiceImpl method was called
-        //verify(userServiceImpl, times(1)).getAllUsers();
-
+        // Assert
+        assertEquals(2, users.size());
     }
+
     @Test
     public void create_ShouldReturnCreatedUser() throws Exception {
-        when(userServiceImpl.createUser(any()))
-                .thenReturn(UserEntity.builder()
-                        .id(1L)
-                        .firstname("John")
-                        .lastname("Doe")
-                        .username("johndoe")
-                        .email("johndoe@example.com")
-                        .createdAt(Instant.now())
-                        .lastModifiedAt(Instant.now()).build());
+        // Arrange
+        UserEntity inputUser = UserEntity.builder()
+                .id(1L)
+                .firstname("ghj")
+                .lastname("Doe")
+                .username("jhgh")
+                .email("johndoe@example.com")
+                .build();
+        UserEntity expectedUser = UserEntity.builder()
+                .id(1L)
+                .firstname("ghj")
+                .lastname("Doe")
+                .username("jhgh")
+                .email("johndoe@example.com")
+                .build();
+        when(userServiceImpl.createUser(any())).thenReturn(expectedUser);
 
-        mvc.perform(post("/user/create")
+        // Act
+        MvcResult mvcResult = mvc.perform(post("/user/create")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(UserEntity.builder().id(1L).build())))
-                .andExpect(status().isOk());
+                        .content(asJsonString(inputUser)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        JSONObject responseJson = new JSONObject(responseBody);
+        String actualUsername = responseJson.getString("username");
+        System.out.println(actualUsername);
+        assertEquals(actualUsername, inputUser.getUsername());
+
+        // Assert
+      /*  int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+
+       assertEquals( mvcResult.getResponse().toString(), expectedUser);*/
     }
+
 
     private static String asJsonString(Object obj) {
         try {
