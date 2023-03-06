@@ -8,6 +8,7 @@ import com.example.userapi.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,16 @@ public class UserServiceImpl implements UserService{
     @Override
     public List<UserEntity> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public Optional<UserEntity> getUserByUsername(String username, String password) throws UserNotFoundException {
+        Optional<UserEntity> user = Optional.ofNullable(userRepository.findByUsername(username));
+        if(user.isPresent() && user.get().getPassword().equals(password)){
+            return user;
+        }else {
+            return Optional.empty();
+        }
     }
 
     @Override
