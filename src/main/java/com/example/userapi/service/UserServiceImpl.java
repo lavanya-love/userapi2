@@ -28,13 +28,9 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Optional<UserEntity> getUserByUsername(String username, String password) throws UserNotFoundException {
-        Optional<UserEntity> user = Optional.ofNullable(userRepository.findByUsername(username));
-        if(user.isPresent() && user.get().getPassword().equals(password)){
-            return user;
-        }else {
-            return Optional.empty();
-        }
+    public UserEntity getUserByUsername(String username, String password) throws UserNotFoundException {
+        UserEntity user = userRepository.findByUsername(username);
+        return user;
     }
 
     @Override

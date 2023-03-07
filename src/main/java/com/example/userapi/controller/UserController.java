@@ -18,18 +18,13 @@ public class UserController {
         this.userServiceImpl = userServiceImpl;
     }
 
-    @GetMapping("/health")
-    public String getStatus(){
-        return "Sample response";
-    }
-
     @GetMapping("/users")
     public List<UserEntity> getAllUsers() {
         return userServiceImpl.getAllUsers();
     }
 
     @GetMapping("/user")
-    public Optional<UserEntity> checkCredentials(@RequestParam String username, @RequestParam String password) throws UserNotFoundException {
+    public UserEntity checkCredentials(@RequestParam String username, @RequestParam String password) throws UserNotFoundException {
         return userServiceImpl.getUserByUsername(username, password);
     }
 
