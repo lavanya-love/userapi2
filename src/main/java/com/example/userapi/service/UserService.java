@@ -15,6 +15,8 @@ public interface UserService {
 
      Optional<UserEntity> getUserById(Long id);
 
+     UserEntity getUserByUsername(String username, String password) throws UserNotFoundException;
+
      void deleteUserById(Long id);
 
      UserEntity updateUser(Long id,UserEntity userEntity) throws UserNotFoundException;

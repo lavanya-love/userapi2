@@ -1,7 +1,6 @@
 package com.example.userapi.repository;
-
-import com.example.userapi.controller.UserController;
 import com.example.userapi.exception.UserAlreadyExistsException;
+import com.example.userapi.exception.UserNotFoundException;
 import com.example.userapi.model.UserEntity;
 import com.example.userapi.service.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -11,11 +10,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -60,6 +57,34 @@ public class UserRepoTest {
     }
 
     @Test
+    void test_getUserByUsername_Shouldreturnuser() throws UserNotFoundException {
+        UserEntity user = UserEntity.builder()
+                .username("janedoe")
+                .password("gavin")
+                .firstname("jane")
+                .build();
+        Mockito.when(userRepo.findByUsername(user.getUsername())).thenReturn(user);
+        assertEquals(user.getFirstname(),userServiceImpl.getUserByUsername(user.getUsername(), user.getPassword()).getFirstname());
+    }
+
+    @Test
+    void test_getUserByUsername_Shouldthrowexception(){
+        UserEntity user = UserEntity.builder()
+                .id(1L)
+                .firstname("John")
+                .lastname("Doe")
+                .username("johndoe")
+                .password("gavin")
+                .email("johndoe@example.com")
+                .createdAt(Instant.now())
+                .lastModifiedAt(Instant.now())
+                .build();
+        Mockito.when(userRepo.findByUsername(user.getUsername())).thenReturn(null);
+        assertThrows(UserNotFoundException.class, () -> userServiceImpl.getUserByUsername(user.getUsername(), user.getPassword()));
+    }
+
+
+    @Test
     void test_createUser_throwsException(){
         UserEntity user = UserEntity.builder()
               .id(1L)
@@ -75,7 +100,7 @@ public class UserRepoTest {
     }
 
     @Test
-    void test_createUSer() throws UserAlreadyExistsException {
+    void test_createUser() throws UserAlreadyExistsException {
         UserEntity user = UserEntity.builder()
               .id(1L)
               .firstname("John")

@@ -56,13 +56,7 @@ public class UserEntity {
    // @Column(name = "processed_at")
     //private LocalDateTime processedAt;
 
-    @Column(name = "address_first_line")
-    private String firstLine;
-
-    @Column(name = "county")
-    private String county;
-
-    @Column(name = "postcode")
-    private String postcode;
+    @Embedded
+    private Address address;
 
 }

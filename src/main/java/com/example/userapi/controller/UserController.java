@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/userApi")
 public class UserController {
     private final UserServiceImpl userServiceImpl;
 
@@ -18,9 +19,14 @@ public class UserController {
         this.userServiceImpl = userServiceImpl;
     }
 
-    @GetMapping("/user")
+    @GetMapping("/users")
     public List<UserEntity> getAllUsers() {
         return userServiceImpl.getAllUsers();
+    }
+
+    @GetMapping("/user")
+    public UserEntity checkCredentials(@RequestParam String username, @RequestParam String password) throws UserNotFoundException {
+        return userServiceImpl.getUserByUsername(username, password);
     }
 
     @PostMapping("/user/create")
