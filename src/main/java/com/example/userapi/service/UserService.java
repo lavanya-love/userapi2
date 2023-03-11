@@ -11,6 +11,8 @@ public interface UserService {
 
      List<UserEntity> getAllUsers();
 
+     UserEntity getUserByUsername(String username, String password) throws UserNotFoundException;
+
      UserEntity createUser(UserEntity userEntity) throws UserAlreadyExistsException;
 
      Optional<UserEntity> getUserById(Long id);

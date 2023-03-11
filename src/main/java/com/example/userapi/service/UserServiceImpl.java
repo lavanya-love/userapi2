@@ -27,16 +27,6 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserEntity getUserByUsername(String username, String password) throws UserNotFoundException {
-        UserEntity user = userRepository.findByUsername(username);
-        if (user == null) {
-            log.error("User Not found");
-            throw new UserNotFoundException("User Not found");
-        }
-        return user;
-    }
-
-    @Override
     public UserEntity createUser(UserEntity userEntity) throws UserAlreadyExistsException {
 
         UserEntity existingUser = userRepository.findByUsername(userEntity.getUsername());
@@ -71,6 +61,4 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(() -> new UserNotFoundException("User Not available"));
 
     }
-
-
 }
